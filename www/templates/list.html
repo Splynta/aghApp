@@ -1,0 +1,28 @@
+<ion-view title="Jobs List">
+    <ion-nav-buttons side="right">
+        <span class="status-bar-button" ng-model="searchStatus" ng-click="changeStatus()">{{ searchStatus.title | capitalize }}</span>
+    </ion-nav-buttons>
+    
+    <ion-content>
+        <ion-list ng-if="searchStatus.status == 'all'" ng-repeat="job in jobs">
+            <ion-item class="list-item list-status-{{getJobStatus(job.status)}} animated bouncedown item-remove-animate item-icon-right" ui-sref="home.job-detail({jobid: job.id})">
+                <div class="list-address">
+                    <span ng-if="job.addressLine1">{{job.addressLine1}},</span>
+                    <span ng-if="job.addressLine2">{{job.addressLine2}},</span>
+                    {{job.postcode}}
+                </div>
+                <span class="list-name">{{job.name}}</span>
+            </ion-item>
+        </ion-list>
+        <ion-list ng-repeat="job in jobs | filter :{status: searchStatus.id}">
+            <ion-item class="list-item list-status-{{getJobStatus(job.status)}} animated bouncedown item-remove-animate item-icon-right" ui-sref="home.job-detail({jobid: job.id})">
+                <div class="list-address">
+                    <span ng-if="job.addressLine1">{{job.addressLine1}},</span>
+                    <span ng-if="job.addressLine2">{{job.addressLine2}},</span>
+                    {{job.postcode}}
+                </div>
+                <span class="list-name">{{job.name}}</span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

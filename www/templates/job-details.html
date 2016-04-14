@@ -1,0 +1,48 @@
+<ion-view title="Job Details">
+    <ion-nav-buttons side="right">
+        <button class="button" ng-click="sendEmail()">Send</button>
+    </ion-nav-buttons>
+    
+    <ion-content>
+        <div class="job-details">
+            <div class="details-wrap">
+                <input type="text" ng-model="job.name" placeholder="Name">
+                <input type="text" ng-model="job.addressLine1" placeholder="Address Line 1">
+                <input type="text" ng-model="job.addressLine2" placeholder="Address Line 2">
+                <input type="text" ng-model="job.city" placeholder="City">
+                <input type="text" ng-model="job.postcode" placeholder="Post Code">
+                <input type="text" ng-model="job.hours" placeholder="Hours">
+            </div>
+            
+            <div class="materials details-wrap">
+                <div class="heading row">
+                    <div class="col"><h2>Materials</h2></div>
+                    <div class="col text-right"><i class="icon ion-ios-plus-empty" ng-click="addMaterial()"></i></div>
+                </div>
+                <ul class="materials-list">
+                    <li ng-repeat="material in job.materials track by $index">
+                        <input type="text" ng-model="material.value" placeholder="Material">
+                        <i class="icon ion-ios-close-empty material-delete" ng-click="removeMaterial($index)"></i>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="details-wrap">
+                <div class="heading">
+                    <h2>Work Done</h2>
+                </div>
+            </div>
+            
+            <div class="details-wrap">
+                <div class="heading">
+                    <h2>Clients Signature</h2>
+                </div>
+                
+                <canvas id="signatureCanvas" ng-model="job.clientSignature"></canvas>
+                <div class="text-right">
+                    <a ng-click="clearCanvas()">Clear</a>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
