@@ -25,8 +25,8 @@ angular.module('aghApp.services', [])
         clientSignature: ''
     }, {
         id: 1,
-        status: 2,
-        name: 'Jane Forest',
+        status: 0,
+        name: 'Anna Park',
         addressLine1: '9 Clement Road',
         addressLine2: 'Swinton',
         city: 'Manchester',
@@ -41,9 +41,41 @@ angular.module('aghApp.services', [])
         clientSignature: ''
     }, {
         id: 2,
-        status: 1,
+        status: 0,
         name: 'Liam Brullar',
         addressLine1: '19 Ashford Road',
+        addressLine2: 'Swinton',
+        city: 'Manchester',
+        postcode: 'M27 8RU',
+        hours: 6,
+        materials: [{
+            value:'Timber'
+        }, {
+            value:'Wire'
+        }],
+        work: 'Installed a plug socket',
+        clientSignature: ''
+    }, {
+        id: 3,
+        status: 2,
+        name: 'Dale Simpson',
+        addressLine1: '6 Chorley Road',
+        addressLine2: 'Swinton',
+        city: 'Manchester',
+        postcode: 'M27 8RU',
+        hours: 6,
+        materials: [{
+            value:'Timber'
+        }, {
+            value:'Wire'
+        }],
+        work: 'Installed a plug socket',
+        clientSignature: ''
+    }, {
+        id: 4,
+        status: 0,
+        name: 'Maria Hollis',
+        addressLine1: '32 Princess Street',
         addressLine2: 'Swinton',
         city: 'Manchester',
         postcode: 'M27 8RU',

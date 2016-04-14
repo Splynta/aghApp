@@ -4,25 +4,25 @@
     </ion-nav-buttons>
     
     <ion-content>
-        <ion-list ng-if="searchStatus.status == 'all'" ng-repeat="job in jobs">
-            <ion-item class="list-item list-status-{{getJobStatus(job.status)}} animated bouncedown item-remove-animate item-icon-right" ui-sref="home.job-detail({jobid: job.id})">
+        <ion-item ng-if="searchStatus.status == 'all'" ng-repeat="job in jobs" class="fadein" ui-sref="home.job-detail({jobid: job.id})">
+            <div class="list-item list-status-{{getJobStatus(job.status)}}">
                 <div class="list-address">
                     <span ng-if="job.addressLine1">{{job.addressLine1}},</span>
                     <span ng-if="job.addressLine2">{{job.addressLine2}},</span>
                     {{job.postcode}}
                 </div>
                 <span class="list-name">{{job.name}}</span>
-            </ion-item>
-        </ion-list>
-        <ion-list ng-repeat="job in jobs | filter :{status: searchStatus.id}">
-            <ion-item class="list-item list-status-{{getJobStatus(job.status)}} animated bouncedown item-remove-animate item-icon-right" ui-sref="home.job-detail({jobid: job.id})">
+            </div>
+        </ion-item>
+        <ion-item ng-repeat="job in jobs | filter :{status: searchStatus.id}" class="fadein" ui-sref="home.job-detail({jobid: job.id})">
+            <div class="list-item list-status-{{getJobStatus(job.status)}}">
                 <div class="list-address">
                     <span ng-if="job.addressLine1">{{job.addressLine1}},</span>
                     <span ng-if="job.addressLine2">{{job.addressLine2}},</span>
                     {{job.postcode}}
                 </div>
                 <span class="list-name">{{job.name}}</span>
-            </ion-item>
-        </ion-list>
+            </div>
+        </ion-item>
     </ion-content>
 </ion-view>
