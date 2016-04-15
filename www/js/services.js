@@ -169,7 +169,9 @@ angular.module('aghApp.services', [])
                     true,       // isHTML
                     null,        // Attachments
                     null        // Attachment data
-                );      
+                );
+            } else {
+                console.log('emailComposer plugin not present');
             }
         }
     };
