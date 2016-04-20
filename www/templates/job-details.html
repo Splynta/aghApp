@@ -11,7 +11,7 @@
                 <input type="text" ng-model="job.addressLine2" placeholder="Address Line 2">
                 <input type="text" ng-model="job.city" placeholder="City">
                 <input type="text" ng-model="job.postcode" placeholder="Post Code">
-                <input type="text" ng-model="job.hours" placeholder="Hours">
+                <input type="number" ng-model="job.hours" placeholder="Hours">
             </div>
             
             <div class="materials details-wrap">
@@ -38,7 +38,7 @@
                     <h2>Clients Signature</h2>
                 </div>
                 
-                <canvas id="signatureCanvas" ng-model="job.clientSignature"></canvas>
+                <canvas id="signatureCanvas" height="100%" ng-model="job.clientSignature"></canvas>
                 <div class="text-right">
                     <a ng-click="clearCanvas()">Clear</a>
                 </div>

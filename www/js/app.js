@@ -1,28 +1,37 @@
 var db = null;
 
+var errorsqlcb = function(error) {
+    console.log('SQL ERR: ' + error.message);  
+};
+
 angular.module('aghApp', ['ionic', 'aghApp.services', 'aghApp.controllers', 'ngAnimate', 'ngCordova'])
 
-.run(function($ionicPlatform, $cordovaSQLite) {
+.run(function($ionicPlatform, $cordovaSQLite, Jobs) {
   $ionicPlatform.ready(function() {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
+    /*if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-    }
+    }*/
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+    db = $cordovaSQLite.openDB({name: 'agh.db', location: 'default'});
+      
+    var successsqlcb = function(res) {
+        console.log('SQL: ' + res.rowsAffected);  
+    };
+      
+    var query = "DROP TABLE jobs";
+    //db.executeSql(query, ['drop-table'], successsqlcb, errorsqlcb);
     
-    db = $cordovaSQLite.openDB({name: 'agh.db'});
-    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS jobs"
-                                + "(id integer primary, name text, "
-                                + "addressline1 text, "
-                                + "addressline2 text, "
-                                + "city text, "
-                                + "postcode text, "
-                                + "hours integer, "
-                                + "materials text, "
-                                + "workdone text, "
-                                + "clientsignature text)");
+    var query = "CREATE TABLE IF NOT EXISTS jobs (id INTEGER PRIMARY KEY AUTOINCREMENT, status INTEGER, name TEXT, addressline1 TEXT, addressline2 TEXT, city TEXT, postcode TEXT, hours INTEGER, materials TEXT, workdone TEXT, clientsignature TEXT)";
+    db.executeSql(query, ['create-table'], successsqlcb, errorsqlcb);
+      
+    query = 'INSERT INTO jobs (status, name, addressline1, addressline2, city, postcode, hours, materials, workdone) VALUES(0, "Anna Park", "9 Clement Road", "Swinton", "Manchester", "M27 0IA", 12, "Timber~Plug", "Installation")';
+    //db.executeSql(query, ['insert-job'], successsqlcb, errorsqlcb); 
+    //db.executeSql(query, ['insert-job'], successsqlcb, errorsqlcb);
+    
+    Jobs.retrieve();
   });
 })
 

@@ -11,7 +11,7 @@
                 <input type="text" ng-model="job.addressLine2" placeholder="Address Line 2">
                 <input type="text" ng-model="job.city" placeholder="City">
                 <input type="text" ng-model="job.postcode" placeholder="Post Code">
-                <input type="text" ng-model="job.hours" placeholder="Hours">
+                <input type="number" ng-model="job.hours" placeholder="Hours">
             </div>
             
             <div class="materials details-wrap">
@@ -19,7 +19,7 @@
                     <div class="col"><h2>Materials</h2></div>
                     <div class="col text-right"><i class="icon ion-ios-plus-empty" ng-click="addMaterial()"></i></div>
                 </div>
-                <ul>
+                <ul class="materials-list">
                     <li ng-repeat="material in job.materials track by $index">
                         <input type="text" ng-model="material.value" placeholder="Material">
                         <i class="icon ion-ios-close-empty material-delete" ng-click="removeMaterial($index)"></i>
@@ -38,7 +38,7 @@
                     <h2>Clients Signature</h2>
                 </div>
                 
-                <canvas id="signatureCanvas"></canvas>
+                <canvas id="signatureCanvas" height="100%"></canvas>
                 <div class="text-right">
                     <a ng-click="clearCanvas()">Clear</a>
                 </div>

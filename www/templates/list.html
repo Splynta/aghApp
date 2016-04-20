@@ -14,6 +14,7 @@
                 <span class="list-name">{{job.name}}</span>
             </div>
         </ion-item>
+        
         <ion-item ng-repeat="job in jobs | filter :{status: searchStatus.id}" class="fadein" ui-sref="home.job-detail({jobid: job.id})">
             <div class="list-item list-status-{{getJobStatus(job.status)}}">
                 <div class="list-address">
@@ -24,5 +25,6 @@
                 <span class="list-name">{{job.name}}</span>
             </div>
         </ion-item>
+        
     </ion-content>
 </ion-view>

@@ -32,9 +32,12 @@ angular.module('aghApp.controllers', [])
         SignatureCanvas.setCanvas('signatureCanvas');
         $scope.job = Jobs.get($stateParams.jobid);
         SignatureCanvas.loadImage($scope.job);
+        console.log(window.devicePixelRatio);
+        
     });
     $scope.$on('$ionicView.unloaded', function () {
         SignatureCanvas.saveImage($scope.job);
+        Jobs.saveJob($scope.job);
     });
     
     $scope.addMaterial = function() {
@@ -55,18 +58,17 @@ angular.module('aghApp.controllers', [])
 .controller('AddJobCtrl', function($scope, Jobs, SignatureCanvas) {
     $scope.$on('$ionicView.loaded', function () {
         SignatureCanvas.setCanvas('signatureCanvas');
-        $scope.job = Jobs.addJob();
+        $scope.job = Jobs.createJob();
     });
     $scope.$on('$ionicView.unloaded', function () {
-        // Remove the job if it is blank or save the image
-        if($scope.job.name == '' &&
-           $scope.job.addressLine1 == '' &&
-           $scope.job.addressLine2 == '' &&
-           $scope.job.postcode == '') {
-            Jobs.deleteJob($scope.job);
-        } else {
+        // If the main details aren't blank then save job
+        if(!$scope.job.name == '' ||
+           !scope.job.addressLine1 == '' ||
+           !$scope.job.addressLine2 == '' ||
+           !$scope.job.postcode == '') {
             SignatureCanvas.saveImage($scope.job);
-        }
+            Jobs.addJob($scope.job);
+        } 
     });
     
     $scope.addMaterial = function() {

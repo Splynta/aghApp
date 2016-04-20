@@ -7,101 +7,53 @@ angular.module('aghApp.services', [])
 })
 
 .factory('Jobs', function() {
-    var jobs = [{
-        id: 0,
-        status: 0,
-        name: 'Jane Forest',
-        addressLine1: '12 Park Lane',
-        addressLine2: 'Swinton',
-        city: 'Manchester',
-        postcode: 'M27 4EQ',
-        hours: 8,
-        materials: [{
-            value:'Timber'
-        }, {
-            value:'Wire'
-        }],
-        work: 'Installed a plug socket',
-        clientSignature: ''
-    }, {
-        id: 1,
-        status: 0,
-        name: 'Anna Park',
-        addressLine1: '9 Clement Road',
-        addressLine2: 'Swinton',
-        city: 'Manchester',
-        postcode: 'M27 0IA',
-        hours: 12,
-        materials: [{
-            value:'Timber'
-        }, {
-            value:'Wire'
-        }],
-        work: 'Installed a plug socket',
-        clientSignature: ''
-    }, {
-        id: 2,
-        status: 0,
-        name: 'Liam Brullar',
-        addressLine1: '19 Ashford Road',
-        addressLine2: 'Swinton',
-        city: 'Manchester',
-        postcode: 'M27 8RU',
-        hours: 6,
-        materials: [{
-            value:'Timber'
-        }, {
-            value:'Wire'
-        }],
-        work: 'Installed a plug socket',
-        clientSignature: ''
-    }, {
-        id: 3,
-        status: 2,
-        name: 'Dale Simpson',
-        addressLine1: '6 Chorley Road',
-        addressLine2: 'Swinton',
-        city: 'Manchester',
-        postcode: 'M27 8RU',
-        hours: 6,
-        materials: [{
-            value:'Timber'
-        }, {
-            value:'Wire'
-        }],
-        work: 'Installed a plug socket',
-        clientSignature: ''
-    }, {
-        id: 4,
-        status: 0,
-        name: 'Maria Hollis',
-        addressLine1: '32 Princess Street',
-        addressLine2: 'Swinton',
-        city: 'Manchester',
-        postcode: 'M27 8RU',
-        hours: 6,
-        materials: [{
-            value:'Timber'
-        }, {
-            value:'Wire'
-        }],
-        work: 'Installed a plug socket',
-        clientSignature: ''
-    }];
+    var jobs = [];
     
     return {
-        // TODO: Function to display certain status type (eg. success)
         retrieve: function() {
-            // TODO: Retrieve jobs from server
+            var query = 'SELECT * FROM jobs';
+            db.executeSql(query, ['select-jobs'], function(res) {
+                for(var x = 0; x < res.rows.length; x++) {
+                    // insert into jobs variable
+                    var row = res.rows.item(x);
+                    var job = {
+                        id: row.id,
+                        status: row.status,
+                        name: row.name,
+                        addressLine1: row.addressline1,
+                        addressLine2: row.addressline2,
+                        city: row.city,
+                        postcode: row.postcode,
+                        hours: row.hours,
+                        materials: [],
+                        work: row.workdone,
+                        clientSignature: row.clientsignature
+                    };
+                    
+                    if(row.materials != null) {
+                        var materials = row.materials.split('~');
+                        for(var y = 0; y < materials.length; y++) {
+                            job.materials.push({value: materials[y]});
+                        }
+                    }
+                    
+                    jobs.push(job);
+                }
+            }, errorsqlcb);
         },
         getAll: function() {
             return jobs;
         },
         get: function(jobId) {
-            // NOTE: Might be in wrong order, might need to search or sort.
-            return jobs[jobId];
+            for(var x = 0; x < jobs.length; x++) {
+                if(jobs[x].id == jobId) {
+                    return jobs[x];
+                }
+            }
+            
+            return false;
         },
-        addJob: function() {
+        createJob: function() {
             var job = {
                 id: jobs.length,
                 status: 1,
@@ -116,9 +68,38 @@ angular.module('aghApp.services', [])
                 clientSignature: ''
             };
             
-            jobs.push(job);
-            
             return job;
+        },
+        addJob: function(job) {
+            var materials = '';
+            for (var x = 0; x < job.materials.length; x++) {
+                materials += job.materials[x].value;
+                
+                if(x != job.materials.length - 1) {
+                    materials += '~';
+                }
+            }
+            
+            var query = 'INSERT INTO jobs (status, name, addressline1, addressline2, city, postcode, hours, materials, workdone, clientsignature) VALUES(';
+            query += '1, '; // status
+            query += '"' + job.name + '", ';
+            query += '"' + job.addressLine1 + '", ';
+            query += '"' + job.addressLine2 + '", ';
+            query += '"' + job.city + '", ';
+            query += '"' + job.postcode + '", ';
+            // TODO: Change hours to something that can only input numbers.
+            if (job.hours == '') job.hours = 0; // Check if hours is blank.
+            query += job.hours + ', ';
+            query += '"' + materials + '", ';
+            query += '"' + job.work + '", ';
+            query += '"' + job.clientSignature + '"';
+            query += ')';
+            
+            db.executeSql(query, ['insert-new-job'], function(res) {
+                job.id = res.insertId; // Add insert id to jobs id
+                jobs.push(job);
+                return true;
+            }, errorsqlcb);
         },
         addMaterial: function(job) {
             if (job.materials.length == 0) {
@@ -129,6 +110,33 @@ angular.module('aghApp.services', [])
         },
         removeMaterial: function(job, id) {
             job.materials.splice(id, 1);
+        },
+        saveJob: function(job) {
+            var materials = '';
+            for (var x = 0; x < job.materials.length; x++) {
+                materials += job.materials[x].value;
+                
+                if(x != job.materials.length - 1) {
+                    materials += '~';
+                }
+            }
+            
+            var query = 'UPDATE jobs SET ';
+            query += 'name="' + job.name + '",';
+            query += 'addressline1="' + job.addressLine1 + '",';
+            query += 'addressline2="' + job.addressLine2 + '",';
+            query += 'city="' + job.city + '",';
+            query += 'postcode="' + job.postcode + '",';
+            query += 'hours=' + job.hours + ',';
+            query += 'workdone="' + job.work + '",';
+            query += 'materials="' + materials + '",';
+            query += 'clientsignature="' + job.clientSignature + '"';
+            query += 'WHERE id = ' + job.id;
+            
+            db.executeSql(query, ['select-jobs'], function(res) {
+                // Result action
+                console.log('saveJob called and completed');
+            }, errorsqlcb);
         },
         deleteJob: function(job) {
             for (var x = 0; x < jobs.length; x++) {
@@ -184,6 +192,11 @@ angular.module('aghApp.services', [])
         setCanvas: function(element) {
             signaturePad = new SignaturePad(document.getElementById(element));
             signaturePad.penColor = '#333';
+            var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+    signaturePad.width = signaturePad.offsetWidth * ratio;
+    signaturePad.height = signaturePad.offsetHeight * ratio;
+    //signaturePad.getContext("2d").scale(ratio, ratio);
+    signaturePad.clear();
         },
         clearCanvas: function() {
             signaturePad.clear();
